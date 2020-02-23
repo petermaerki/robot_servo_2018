@@ -19,7 +19,7 @@ def run(s):
   s('B', 0.5j)
   s.move(ms=2000)
   s('A,B', 0.5, duration=300)
-  s.move()
+  s.move(waitforservos='A,B')
 
   def knick(fWinkel):
     print('  knick %0.2f' % fWinkel)

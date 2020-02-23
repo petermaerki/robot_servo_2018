@@ -19,7 +19,7 @@ servos = lib_commands.Servos()
 h = lib_commands.Help()
 
 # Start the choreo
-if False:
+if True:
   current_choreo.initialize(objServos)
   current_choreo.run(objServos)
 

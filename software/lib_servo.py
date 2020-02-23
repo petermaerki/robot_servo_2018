@@ -154,7 +154,7 @@ class Servos:
     # Define the stop criterion based on the parameters
     if ms is not None:
       # Wait for 'ms' ms
-      print('  move(ms="%d") ...' % ms)
+      print('  move(ms=%d) ...' % ms)
       iTimeEnd = self.__iTimeNow_ms + ms
       def done():
         return self.__iTimeNow_ms > iTimeEnd
@@ -170,17 +170,18 @@ class Servos:
         listServos = [self.__dictServos[name] for name in listNames]
       def done():
         for objServo in listServos:
+          # print('Servo "%s": %s' % (objServo.strName, objServo.isDone(self.__iTimeNow_ms)))
           if not objServo.isDone(self.__iTimeNow_ms):
             return False
         return True
 
-      # Run until the stop-criterion is reaches
-      while True:
-        self.updateMove(self.__iTimeNow_ms)
-        if done():
-          return
-        hw.sleep_ms(10)
-        self.__iTimeNow_ms = hw.ticks_ms()
+    # Run until the stop-criterion is reaches
+    while True:
+      self.updateMove(self.__iTimeNow_ms)
+      if done():
+        return
+      hw.sleep_ms(10)
+      self.__iTimeNow_ms = hw.ticks_ms()
 
   def __call__(self, strNames, pos, duration=1000, move='S'):
     '''
@@ -222,7 +223,7 @@ class Move:
     self._strMoveType = strMoveType
 
   def isDone(self, iTimeNow_ms):
-    return self.__getAnteil(iTimeNow_ms) >= 0
+    return self.__getAnteil(iTimeNow_ms) >= 1.0
 
   def __getAnteil(self, iTimeNow_ms):
     assert self._fStartPos != None, 'setStartPosition() wurde nicht aufgerufen!'

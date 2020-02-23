@@ -41,7 +41,7 @@ if sys.platform == 'pyboard':
       self._write(0x00, (old_mode & 0x7F) | 0x10) # Mode 1, sleep
       self._write(0xfe, prescale) # Prescale
       self._write(0x00, old_mode) # Mode 1
-      time.sleep_us(5)
+      hw.sleep_us(5)
       self._write(0x00, old_mode | 0xa1) # Mode 1, autoincrement on
 
     def pwm(self, index, on=None, off=None):
@@ -72,6 +72,8 @@ if sys.platform == 'pyboard':
       return utime.ticks_ms()
     def ticks_diff(self, a_ms, b_ms):
       return utime.ticks_diff(a_ms, b_ms)
+    def sleep_us(self,us):
+      time.sleep_us(us)
 else:
   class HwAbstraction:
     def __init__(self):
@@ -85,6 +87,8 @@ else:
       return int(1000.0*time.time())
     def ticks_diff(self, a_ms, b_ms):
       return a_ms - b_ms
+    def sleep_us(self,us):
+      pass
 
 hw = HwAbstraction()
 

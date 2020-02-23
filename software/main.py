@@ -161,26 +161,3 @@ s=objServos
 print('loaded...')
 #print(choreo)
 
-def handorgel(winkel= 0.8): 
-  s('B,D,F', winkel, 3000, move='L')
-  s('C,E', -winkel, 3000, move='L')
-  s('G', -winkel/2.0-winkel/5.0, 3000, move='L')
-  s.wait_ms(3000)
-
-def bogen(winkel= -0.2): 
-  s('B,C,D,E,F', winkel, 1000, move='L')
-  s('A,G', 1, 1000, move='L')
-  s.wait_ms(1000)
-
-def bogenbogen(n=3): 
-  s('A,G', 1, 1000, move='L')
-  for i in range(n):
-    s('B,C,D,E,F', -0.1, 2000, move='L')
-    s.wait_ms(2000)
-    s('B,C,D,E,F', -0.2, 2000, move='L')
-    s.wait_ms(2000)
-
-print('main.py: starting...')
-#handorgel(0.3)
-#bogen(-0.3)
-bogenbogen()

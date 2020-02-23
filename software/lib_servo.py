@@ -2,52 +2,91 @@
 # https://micropython-pca9685.readthedocs.io/en/latest/
 # https://www.adafruit.com/product/815
 # https://cdn-learn.adafruit.com/downloads/pdf/16-channel-pwm-servo-driver.pdf 
+import sys
 import math
-import utime
 import time
-import ustruct
-import machine
+if sys.platform == 'pyboard':
+  import pyb
+  import utime
+  import ustruct
+  import machine
 
-from pyb import I2C
+if sys.platform == 'pyboard':
+  class PCA9685:
+    def __init__(self, i2c=pyb.I2C(2), address=0x40):
+      self.i2c = i2c
+      #print(self.i2c)
+      self.address = address
+      self.reset()
 
-class PCA9685:
-  def __init__(self, i2c= I2C(2) , address=0x40):
-    self.i2c = i2c
-    #print(self.i2c)
-    self.address = address
-    self.reset()
+    def _write(self, address, value):
+      self.i2c.writeto_mem(self.address, address, bytearray([value]))
 
-  def _write(self, address, value):
-    self.i2c.writeto_mem(self.address, address, bytearray([value]))
+    def _read(self, address):
+      return self.i2c.readfrom_mem(self.address, address, 1)[0]
 
-  def _read(self, address):
-    return self.i2c.readfrom_mem(self.address, address, 1)[0]
+    def setTimeOn_us(self, iI2cIndex, fTimeOn_us):
+      iTime = int(fTimeOn_us * 4096 * self.__freq / 1000000)
+      self.pwm(iI2cIndex, on=0, off=iTime)
 
-  def setTimeOn_us(self, iI2cIndex, fTimeOn_us):
-    iTime = int(fTimeOn_us * 4096 * self.__freq / 1000000)
-    self.pwm(iI2cIndex, on=0, off=iTime)
+    def reset(self):
+      self._write(0x00, 0x00) # Mode1
 
-  def reset(self):
-    self._write(0x00, 0x00) # Mode1
+    def freq(self, freq=None):
+      if freq is None:
+        return int(25000000.0 / 4096 / (self._read(0xfe) - 0.5))
+      self.__freq = freq
+      prescale = int(25000000.0 / 4096.0 / freq + 0.5)
+      old_mode = self._read(0x00) # Mode 1
+      self._write(0x00, (old_mode & 0x7F) | 0x10) # Mode 1, sleep
+      self._write(0xfe, prescale) # Prescale
+      self._write(0x00, old_mode) # Mode 1
+      time.sleep_us(5)
+      self._write(0x00, old_mode | 0xa1) # Mode 1, autoincrement on
 
-  def freq(self, freq=None):
-    if freq is None:
-      return int(25000000.0 / 4096 / (self._read(0xfe) - 0.5))
-    self.__freq = freq
-    prescale = int(25000000.0 / 4096.0 / freq + 0.5)
-    old_mode = self._read(0x00) # Mode 1
-    self._write(0x00, (old_mode & 0x7F) | 0x10) # Mode 1, sleep
-    self._write(0xfe, prescale) # Prescale
-    self._write(0x00, old_mode) # Mode 1
-    time.sleep_us(5)
-    self._write(0x00, old_mode | 0xa1) # Mode 1, autoincrement on
+    def pwm(self, index, on=None, off=None):
+      if on is None or off is None:
+        data = self.i2c.readfrom_mem(self.address, 0x06 + 4 * index, 4)
+        return ustruct.unpack('<HH', data)
+      data = ustruct.pack('<HH', on, off)
+      self.i2c.writeto_mem(self.address, 0x06 + 4 * index,  data)
+else:
+  class Pca9685Mock:
+    def __init__(self):
+      pass
+    def setTimeOn_us(self, iI2cIndex, fTime_us):
+      pass
 
-  def pwm(self, index, on=None, off=None):
-    if on is None or off is None:
-      data = self.i2c.readfrom_mem(self.address, 0x06 + 4 * index, 4)
-      return ustruct.unpack('<HH', data)
-    data = ustruct.pack('<HH', on, off)
-    self.i2c.writeto_mem(self.address, 0x06 + 4 * index,  data)
+if sys.platform == 'pyboard':
+  class HwAbstraction:
+    def __init__(self):
+      self.__objI2c = machine.I2C(2) # Peter von 1 auf 2 geaendert
+      self.__objPca9685 = PCA9685(self.__objI2c)
+      self.__objPca9685.freq(50.0)
+    @property
+    def Pca9685(self):
+      return self.__objPca9685
+    def sleep_ms(self, ms):
+      utime.sleep_ms(ms)
+    def ticks_ms(self):
+      return utime.ticks_ms()
+    def ticks_diff(self, a_ms, b_ms):
+      return utime.ticks_diff(a_ms, b_ms)
+else:
+  class HwAbstraction:
+    def __init__(self):
+      self.__objPca9685 = Pca9685Mock()
+    @property
+    def Pca9685(self):
+      return self.__objPca9685
+    def sleep_ms(self, ms):
+      pass
+    def ticks_ms(self):
+      return int(1000.0*time.time())
+    def ticks_diff(self, a_ms, b_ms):
+      return a_ms - b_ms
+
+hw = HwAbstraction()
 
 class Servo:
   def __init__(self, pca9685, iI2cIndex, strName, iMin_us=600, iMax_us=2400, fPositionMin=-1.0, fPositionMax=1.0):
@@ -84,21 +123,18 @@ class Servo:
 
 class Servos:
   def __init__(self):
-    self.__objI2c = machine.I2C(2) # Peter von 1 auf 2 geaendert
-    self.__objPca9685 = PCA9685(self.__objI2c)
-    self.__objPca9685.freq(50.0)
     self.__dictServos = {}
     self.resetTime()
 
   def resetTime(self):
-    self.__iTimeStart_ms = utime.ticks_ms()
+    self.__iTimeStart_ms = hw.ticks_ms()
     self.__iTimeNow_ms = self.__iTimeStart_ms
 
   def __addServo(self, objServo):
     self.__dictServos[objServo.strName] = objServo
 
   def addServo(self, iI2cIndex, strName, iMin_us=600, iMax_us=2400, fPositionMin=-1.0, fPositionMax=1.0):
-    objServo = Servo(self.__objPca9685, iI2cIndex, strName, iMin_us, iMax_us, fPositionMin, fPositionMax)
+    objServo = Servo(hw.Pca9685, iI2cIndex, strName, iMin_us, iMax_us, fPositionMin, fPositionMax)
     self.__addServo(objServo)
 
   def setPosition(self, strName, fPosition):
@@ -109,11 +145,11 @@ class Servos:
     print('  wait_ms %dms' % iTimeToWait_ms)
     self.__iTimeNow_ms = self.__iTimeNow_ms + iTimeToWait_ms
     while True:
-      iTimeNow_ms = utime.ticks_ms()
+      iTimeNow_ms = hw.ticks_ms()
       self.updateMove(iTimeNow_ms)
       if iTimeNow_ms > self.__iTimeNow_ms:
         return
-      utime.sleep_ms(10)
+      hw.sleep_ms(10)
 
   def __call__(self, strNames, pos, duration=1000, move='S'):
     '''
@@ -163,7 +199,7 @@ class Move:
 
   def getPosition(self, iTimeNow_ms):
     assert self._fStartPos != None, 'setStartPosition() wurde nicht aufgerufen!'
-    iTime_ms = utime.ticks_diff(iTimeNow_ms, self._iTimeStart_ms)
+    iTime_ms = hw.ticks_diff(iTimeNow_ms, self._iTimeStart_ms)
     fAnteil = iTime_ms/self._iTimeDuration_ms
     if fAnteil > 1.0:
       fAnteil = 1.0

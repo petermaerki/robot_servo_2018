@@ -108,6 +108,11 @@ class Servo:
   def strName(self):
     return self.__strName
 
+  def isDone(self, iTimeNow_ms):
+    if self.__objMove is None:
+      return True
+    return self.__objMove.isDone(iTimeNow_ms)
+
   def setPosition(self, fPosition):
     fTime_us = self.__iMin_us + (fPosition - self.__fPositionMin) * (self.__iMax_us - self.__iMin_us) / (self.__fPositionMax - self.__fPositionMin) 
     fTime_us = min(fTime_us, self.__iMax_us)
@@ -145,15 +150,37 @@ class Servos:
     objServo = self.__dictServos[strName]
     objServo.setPosition(fPosition)
 
-  def wait_ms(self, iTimeToWait_ms):
-    print('  wait_ms %dms' % iTimeToWait_ms)
-    self.__iTimeNow_ms = self.__iTimeNow_ms + iTimeToWait_ms
-    while True:
-      iTimeNow_ms = hw.ticks_ms()
-      self.updateMove(iTimeNow_ms)
-      if iTimeNow_ms > self.__iTimeNow_ms:
-        return
-      hw.sleep_ms(10)
+  def move(self, ms=None, waitforservos=None):
+    # Define the stop criterion based on the parameters
+    if ms is not None:
+      # Wait for 'ms' ms
+      print('  move(ms="%d") ...' % ms)
+      iTimeEnd = self.__iTimeNow_ms + ms
+      def done():
+        return self.__iTimeNow_ms > iTimeEnd
+    else:
+      if waitforservos is None:
+        # Wait until all servos reached there destination
+        print('  move(waitforservos="<ALL>") ...')
+        listServos = self.__dictServos.values()
+      else:
+        # Wait till named servos reached there destination
+        print('  move(waitforservos="%s") ...' % waitforservos)
+        listNames = waitforservos.split(',')
+        listServos = [self.__dictServos[name] for name in listNames]
+      def done():
+        for objServo in listServos:
+          if not objServo.isDone(self.__iTimeNow_ms):
+            return False
+        return True
+
+      # Run until the stop-criterion is reaches
+      while True:
+        self.updateMove(self.__iTimeNow_ms)
+        if done():
+          return
+        hw.sleep_ms(10)
+        self.__iTimeNow_ms = hw.ticks_ms()
 
   def __call__(self, strNames, pos, duration=1000, move='S'):
     '''
@@ -194,6 +221,15 @@ class Move:
     self._fEndPos = fEndPos
     self._strMoveType = strMoveType
 
+  def isDone(self, iTimeNow_ms):
+    return self.__getAnteil(iTimeNow_ms) >= 0
+
+  def __getAnteil(self, iTimeNow_ms):
+    assert self._fStartPos != None, 'setStartPosition() wurde nicht aufgerufen!'
+    iTime_ms = hw.ticks_diff(iTimeNow_ms, self._iTimeStart_ms)
+    fAnteil = iTime_ms/self._iTimeDuration_ms
+    return fAnteil
+
   def setStartPosition(self, fStartPos):
     assert fStartPos != None
     self._fStartPos = fStartPos
@@ -202,9 +238,7 @@ class Move:
       self._fEndPos = fStartPos + self._fEndPos.imag
 
   def getPosition(self, iTimeNow_ms):
-    assert self._fStartPos != None, 'setStartPosition() wurde nicht aufgerufen!'
-    iTime_ms = hw.ticks_diff(iTimeNow_ms, self._iTimeStart_ms)
-    fAnteil = iTime_ms/self._iTimeDuration_ms
+    fAnteil = self.__getAnteil(iTimeNow_ms)
     if fAnteil > 1.0:
       fAnteil = 1.0
     return self.getPositionAnteil(fAnteil)

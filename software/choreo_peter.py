@@ -2,8 +2,8 @@ import lib_servo
 
 import initialize_robot_servo_2018
 
-def initialize_servos(s):
-  initialize_robot_servo_2018.initialize_servos_serial1(s)
+def initialize(s):
+  initialize_robot_servo_2018.initialize_serial1(s)
 
 def run(s):
   def handorgel(winkel= 0.8): 
@@ -86,5 +86,5 @@ def run(s):
 
 if __name__ == '__main__':
   s = lib_servo.Servos()
-  initialize_servos(s)
+  initialize(s)
   run(s)

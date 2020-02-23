@@ -14,7 +14,7 @@ class RobotRunner:
     self.str_port = str_port
     str_port2 = 'ser:' + self.str_port
 
-    self.fs = mp.mpfshell.MpFileShell(color=False, caching=False, reset=False)
+    self.fs = mp.mpfshell.MpFileShell(color=False, caching=False, reset=True)
     self.fs.do_open(args=str_port2)
 
   @property

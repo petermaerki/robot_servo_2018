@@ -1,6 +1,6 @@
 
 
-def initialize_servos_serial1(s):
+def initialize_serial1(s):
   s.addServo(9, 'Z', iMin_us= 1100, iMax_us=1600, fPositionMin=1.0, fPositionMax=0.0) # Zange, zu 0.0 offen 1.0
   s.addServo(8, 'K') # Kopf, links -1.0 rechts 1.0
   s.addServo(7, 'A')

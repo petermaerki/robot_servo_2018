@@ -2,5 +2,5 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.pythonPath": "C:\\Users\\maerki\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
-    "python.envFile": "${workspaceFolder}/.env"
+    "python.envFile": "${workspaceFolder}/robot_servo_2018.environment.txt"
 }

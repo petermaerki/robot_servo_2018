@@ -30,8 +30,11 @@ def run(s):
   knick(-0.5)
   knick(-0.8)
 
-if __name__ == '__main__':
-  s = lib_servo.Servos()
+def initialize_servos(s):
   s.addServo(7, 'A')
   s.addServo(8, 'B')
+
+if __name__ == '__main__':
+  s = lib_servo.Servos()
+  initialize_servos(s)
   run(s)

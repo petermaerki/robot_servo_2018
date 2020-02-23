@@ -14,7 +14,7 @@ class RobotRunner:
     self.str_port = str_port
     str_port2 = 'ser:' + self.str_port
 
-    self.fs = mp.mpfshell.MpFileShell(color=False, caching=False, reset=True)
+    self.fs = mp.mpfshell.MpFileShell(color=False, caching=False, reset=False)
     self.fs.do_open(args=str_port2)
 
   @property
@@ -55,7 +55,7 @@ class RobotRunner:
 
 if __name__ == "__main__":
   if True:
-    r = RobotRunner(str_port='COM9')
+    r = RobotRunner(str_port='COM10')
     r.upload_files(directory='software')
     # r.machine_reset()
     r.soft_reset()

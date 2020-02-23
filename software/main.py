@@ -24,31 +24,6 @@ timer1 = pyb.Timer(1)
 button1 = pyb.Switch()
 
 objServos = lib_servo.Servos()
-objServos.addServo(9, 'Z', iMin_us= 1100, iMax_us=1600, fPositionMin=1.0, fPositionMax=0.0) # Zange, zu 0.0 offen 1.0
-objServos.addServo(8, 'K') # Kopf, links -1.0 rechts 1.0
-objServos.addServo(7, 'A')
-offset_B = 60
-objServos.addServo(6, 'B', iMin_us= 600+offset_B, iMax_us=2400+offset_B, fPositionMin=-1.0, fPositionMax=1.0)
-offset_C = 40
-objServos.addServo(5, 'C', iMin_us= 600+offset_C, iMax_us=2400+offset_C, fPositionMin=-1.0, fPositionMax=1.0)
-offset_D = 50
-objServos.addServo(4, 'D', iMin_us= 600+offset_D, iMax_us=2400+offset_D, fPositionMin=-1.0, fPositionMax=1.0)
-offset_E = 50
-objServos.addServo(3, 'E', iMin_us= 600+offset_E, iMax_us=2400+offset_E, fPositionMin=-1.0, fPositionMax=1.0)
-offset_F = 40
-objServos.addServo(2, 'F', iMin_us= 600+offset_F, iMax_us=2400+offset_F, fPositionMin=-1.0, fPositionMax=1.0)
-offset_G = 30
-objServos.addServo(1, 'G', iMin_us= 600+offset_G, iMax_us=2400+offset_G, fPositionMin=-1.0, fPositionMax=1.0)
-objServos.addServo(0, 'T', iMin_us= 600, iMax_us=2400, fPositionMin=1.0, fPositionMax=-1.0) # Tail 1: oben, 0 flach, -1 unten
-if False:
-  objServos.setPosition('A', 0.5)
-  objServos.setPosition('B', 0.0)
-  objServos.setPosition('C', 0.0)
-  objServos.setPosition('D', 0.0)
-  objServos.setPosition('E', 0.0)
-  objServos.setPosition('F', 0.0)
-  objServos.setPosition('G', 0.0)
-  objServos.setPosition('T', 0.5)
 
 buzzer_pin = pyb.Pin('Y1', pyb.Pin.OUT_PP)
 def buzzer(n=1):
@@ -158,6 +133,9 @@ servos = Servos()
 h = Help()
 s=objServos
 
+import choreo_peter as choooreo
+choooreo.initialize_servos(objServos)
+choooreo.run(objServos)
 print('loaded...')
 #print(choreo)
 

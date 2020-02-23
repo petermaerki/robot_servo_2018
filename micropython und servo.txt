@@ -1,0 +1,7 @@
+https://learn.adafruit.com/micropython-hardware-pca9685-pwm-and-servo-driver?view=all
+
+unten auf der seite fuer micropython
+
+
+oder:
+https://forum.micropython.org/viewtopic.php?f=14&t=4467

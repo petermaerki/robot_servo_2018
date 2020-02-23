@@ -1,0 +1,36 @@
+class Servo:
+  pass
+
+class Run:
+  def __init__(self, listServos):
+    pass
+
+  def run(self):
+    pass
+
+a = Servo(0, address=0x40, pos_min = -270.0/2.0, pos_max = 270.0/2.0, pulse_min_us = 1000, pulse_max_us = 3000)
+# adress ist die Adresse vom pca9685, falls mehrere davon, gäbe es verschiedene Adressen
+# die Drehrichtung lässt sich umkehren wenn pulse_min_us grösser als pulse_max_us
+b = Servo(1)
+c = Servo(2)
+
+#r = Run(a, b, c)
+
+#a.set(90, end_ms=1000, duration_ms=800)
+#a.inc(15, 200)
+
+#r.set((a, b, c), 90, end_ms=1000))
+
+
+r.set((a, b, c), 90.0, duration_ms=800, curve=sine) # absolute Position
+r.set((a, b, c), -5.0, relative=True) # aenderung um -5 grad
+r.set(a, 90) # default duration_ms=1000, curve=sine
+r.set(a, 90, 900) # duration_ms=900, curve=sine
+
+def knick(winkel):
+  r.set((a, c, e, g),winkel)
+  r.set((b, d, f, h),-winkel)
+  
+knick(30.0)
+knick(-30.0)
+knick(0.0)

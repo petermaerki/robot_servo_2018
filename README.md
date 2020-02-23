@@ -1,2 +1,2 @@
 # robot_servo_2018
-Robot build from Servos
+Robot built from servos

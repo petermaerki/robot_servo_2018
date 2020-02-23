@@ -180,6 +180,7 @@ def bogenbogen(n=3):
     s('B,C,D,E,F', -0.2, 2000, move='L')
     s.wait_ms(2000)
 
+print('main.py: starting...')
 #handorgel(0.3)
 #bogen(-0.3)
 bogenbogen()

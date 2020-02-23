@@ -1,0 +1,6 @@
+[submodule "modules/compact_2012_pyserial"]
+	path = modules/compact_2012_pyserial
+	url = https://github.com/nanophysics/compact_2012_pyserial.git
+[submodule "modules/compact_2012_mpfshell"]
+	path = modules/compact_2012_mpfshell
+	url = https://github.com/nanophysics/compact_2012_mpfshell.git

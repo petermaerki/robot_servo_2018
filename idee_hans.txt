@@ -9,8 +9,8 @@ class Run:
     pass
 
 a = Servo(0, address=0x40, pos_min = -270.0/2.0, pos_max = 270.0/2.0, pulse_min_us = 1000, pulse_max_us = 3000)
-# adress ist die Adresse vom pca9685, falls mehrere davon, gäbe es verschiedene Adressen
-# die Drehrichtung lässt sich umkehren wenn pulse_min_us grösser als pulse_max_us
+# adress ist die Adresse vom pca9685, falls mehrere davon, gï¿½be es verschiedene Adressen
+# die Drehrichtung lï¿½sst sich umkehren wenn pulse_min_us grï¿½sser als pulse_max_us
 b = Servo(1)
 c = Servo(2)
 
@@ -34,3 +34,40 @@ def knick(winkel):
 knick(30.0)
 knick(-30.0)
 knick(0.0)
+
+
+Move-Tabelle
+============
+
+list_stuetzpunkte = (
+  # fAnteilZeit, fPosition
+  (0.0, 0.0),
+  (0.6, 0.9),
+  (0.7, 1.0),
+  (1.0, 0.8),
+)
+
+def getPositionAnteil(self, fAnteil):
+  fAnteilLast = None
+  for fAnteil_, fPosition in list_stuetzpunkte:
+    if fAnteil_ > fAnteil:
+      if fAnteilLast is not None:
+        # Linear algebra: fAteil -> fAnteilLast/fAnteil_, fPositionLast,fPositionLast
+        return fPosition
+      fAnteilLast = fAnteil_
+      fPositionLast = fPosition
+    
+    
+  lookup fAnteil -> list_stuetzpunkte
+  return fPosition
+
+list_stuetzpunkte_servo_A = ..
+list_stuetzpunkte_servo_B = ..
+list_stuetzpunkte_servo_C = ..
+list_stuetzpunkte_servo_D = ..
+
+s('C', 0.0, pause, move=func_position(list_stuetzpunkte_servo_A))
+s('D', 0.0, pause, move=func_position(list_stuetzpunkte_servo_B))
+s('E', 0.0, pause, move=func_position(list_stuetzpunkte_servo_C))
+s('F', 0.0, pause, move=func_position(list_stuetzpunkte_servo_D))
+s.wait()  

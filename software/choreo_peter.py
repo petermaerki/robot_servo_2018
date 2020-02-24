@@ -1,5 +1,4 @@
 import lib_servo
-
 import initialize_robot_servo_2018
 
 def initialize(s):
@@ -71,19 +70,13 @@ def run(s):
     s.move()
 
 
-  def nino(): 
-    for i in range(5):
-      pause = 2000
+  def schwanzwackel(n=4): 
+    pause = 300
+    for i in range(n):
       s('T', 0.8, pause, move='S')
       s.move()
-      s('T', 0.0, pause, move='S')
+      s('T', 0.5, pause, move='S')
       s.move()
-    s('T', -0.8, pause, move='L')
-    s.move()
-    s('Z', 1, pause, move='S')
-    s.move()
-    s('Z', 0, pause, move='S')
-    s.move()
 
 
   def singlestep(axes = 'BCDE',  movetime_ms = 4000, first_step = False): #foreward = True,
@@ -135,14 +128,18 @@ def run(s):
   # singlestep('EDCB')
   # end_flach()
   
+  import lib_commands
+
+
   init_flach()
-  #one_wave(foreward = False)
   move(steps = 1,  wave_time_ms = 10000, foreward = True)
-  s.move(ms=1000)
-  move(steps = 3,  wave_time_ms = 3000, foreward = True)
-  s.move(ms=1000)
-  move(steps = 4,  wave_time_ms = 3000, foreward = False)
+  # s.move(ms=1000)
+  # move(steps = 3,  wave_time_ms = 3000, foreward = True)
+  # s.move(ms=1000)
+  # move(steps = 4,  wave_time_ms = 3000, foreward = False)
+  # schwanzwackel()
   end_flach()
+  #lib_commands.buzzer(3)
 
 
 if __name__ == '__main__':

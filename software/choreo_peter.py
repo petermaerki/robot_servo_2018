@@ -132,7 +132,7 @@ def run(s):
 
 
   init_flach()
-  move(steps = 1,  wave_time_ms = 10000, foreward = True)
+  move(steps = 1,  wave_time_ms = 15000, foreward = True)
   # s.move(ms=1000)
   # move(steps = 3,  wave_time_ms = 3000, foreward = True)
   # s.move(ms=1000)

@@ -180,7 +180,7 @@ class Servos:
       self.updateMove(self.__iTimeNow_ms)
       if done():
         return
-      hw.sleep_ms(10)
+      hw.sleep_ms(20)
       self.__iTimeNow_ms = hw.ticks_ms()
 
   def __call__(self, strNames, pos, duration=1000, move='S'):

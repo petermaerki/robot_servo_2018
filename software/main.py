@@ -15,8 +15,23 @@ stop = lib_commands.Stop()
 status = lib_commands.Status()
 c = choreo = lib_commands.Choreo(current_choreo)
 servo = lib_commands.Servo()
+s = lib_commands.Servo()
 servos = lib_commands.Servos()
 h = lib_commands.Help()
+
+a = 'a'
+b = 'b'
+c = 'c'
+d = 'd'
+e = 'e'
+f = 'f'
+g = 'g'
+t = 't'
+z = 'z'
+k = 'k'
+
+# example used fom repl, shows examples:
+# h
 
 # Start the choreo
 if True:

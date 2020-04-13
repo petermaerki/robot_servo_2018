@@ -96,7 +96,7 @@ class Servo:
   def __init__(self, pca9685, iI2cIndex, strName, iMin_us=600, iMax_us=2400, fPositionMin=-1.0, fPositionMax=1.0):
     self.__pca9685 = pca9685
     self.__iI2cIndex = iI2cIndex
-    self.__strName = strName
+    self.__strName = strName.upper()
     self.__iMin_us = iMin_us
     self.__iMax_us = iMax_us
     self.__fPositionMin = fPositionMin
@@ -147,7 +147,7 @@ class Servos:
     self.__addServo(objServo)
 
   def setPosition(self, strName, fPosition):
-    objServo = self.__dictServos[strName]
+    objServo = self.__dictServos[strName.upper()]
     objServo.setPosition(fPosition)
 
   def move(self, ms=None, waitforservos=None):

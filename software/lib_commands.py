@@ -111,6 +111,8 @@ class Help:
     print('  status')
     print('  choreo')
     print('  servo(strName, fPosition) fPosition: -1.0 ... 1.0')
+    print('  or in short form')
+    print('  s(\'A\', 0.3)')
     print('  servos  Listet die vorhandenen Servos auf.')
     print('  h()')
     return ''

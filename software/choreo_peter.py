@@ -134,12 +134,12 @@ def run(s):
   init_flach()
   move(steps = 1,  wave_time_ms = 10000, foreward = True)
   s.move(ms=1000)
-  move(steps = 3,  wave_time_ms = 3000, foreward = True)
-  s.move(ms=1000)
-  move(steps = 4,  wave_time_ms = 3000, foreward = False)
-  schwanzwackel()
-  end_flach()
-  lib_commands.buzzer(3)
+  # move(steps = 3,  wave_time_ms = 3000, foreward = True)
+  # s.move(ms=1000)
+  # move(steps = 4,  wave_time_ms = 3000, foreward = False)
+  # schwanzwackel()
+  # end_flach()
+  # lib_commands.buzzer(3)
 
 
 if __name__ == '__main__':

@@ -21,9 +21,9 @@ def toggle():
 
 if __name__ == "__main__":
   if True:
-    shell = mp.micropythonshell.MicropythonShell()
+    shell = mp.micropythonshell.MicropythonShell(str_port='COM10')
     shell.sync_folder(directory_local='software')
-    measure_roundtrip(shell)
+    # measure_roundtrip(shell)
     # shell.machine_reset()
     # shell.soft_reset()
     shell.repl()

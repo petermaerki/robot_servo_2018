@@ -3,7 +3,7 @@
 def initialize_serial1(s):
   s.addServo(9, 'Z', iMin_us= 1100, iMax_us=1600, fPositionMin=1.0, fPositionMax=0.0) # Zange, zu 0.0 offen 1.0
   s.addServo(8, 'K') # Kopf, links -1.0 rechts 1.0
-  s.addServo(7, 'A')
+  s.addServo(7, 'A', iMin_us= 600, iMax_us=2400, fPositionMin=-1.5, fPositionMax=0.5) # bei 0 steht der Kopf aufwaerts
   offset_B = 60
   s.addServo(6, 'B', iMin_us= 600+offset_B, iMax_us=2400+offset_B, fPositionMin=-1.0, fPositionMax=1.0)
   offset_C = 40

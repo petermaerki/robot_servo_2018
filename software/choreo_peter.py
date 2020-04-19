@@ -55,20 +55,27 @@ def run(s):
     s.move(pause)
 
   def aufrichten(): 
-    pause = 300
+    pause = 2000
+    rechtwinkel = 0.75
+    axes = 'BCDE'
+    s('A', -0.5, pause, move='S')
+    s('B', rechtwinkel, pause, move='S')
     s.move()
-    s('A', -0.2, pause, move='L')
-    s('C', 0.7, pause, move='L')
-    s.move()
-    s('A', 0.3, 2000, move='L')
-    s('C', 0.0, 2000, move='L')
-    s('D', 0.7, 2000, move='L')
-    s.move()
-    s('D', 0.0, 2000, move='L')
-    s('E', 0.7, 2000, move='L')
-    s.move()
+    for index in range(len(axes)-1):
+        s(axes[index], 0, pause, move='S')
+        s(axes[index+1], rechtwinkel, pause, move='S')
+        s.move()
 
   def ablegen(): 
+    pause = 2000
+    rechtwinkel = 0.75
+    axes = 'EDCB'
+    for index in range(len(axes)-1):
+        s(axes[index], 0, pause, move='S')
+        s(axes[index+1], rechtwinkel, pause, move='S')
+        s.move()
+    s('A', 0, pause, move='S')
+    s('B', 0, pause, move='S')
     s.move()
 
   def schwanzwackel(n=4): 
@@ -79,6 +86,20 @@ def run(s):
       s('T', 0.5, pause, move='S')
       s.move(pause)
 
+  def schwanzbeisser(): 
+    aufrichten()
+    s.move(ms=500) # etwas warten
+    s('C', 0.6, 3000, move='S')
+    s.move()
+    s('Z', 1, 1000, move='S')
+    s('T', 0.6, 3000, move='S')
+    s.move()
+    s.move(ms=2000) # etwas warten
+    s('T', 0.0, 3000, move='S')
+    s.move()
+    s('C', 0, 3000, move='S')
+    s.move()
+    ablegen()
 
   def singlestep(axes = 'BCDE',  movetime_ms = 4000, first_step = False): #foreward = True,
     # time_part, argument, argument, argument, argument
@@ -166,13 +187,14 @@ def run(s):
 
   # move(steps = 3,  wave_time_ms = 3000, foreward = True)
 
-  aufrichten()
-  s.move(ms=1000) # etwas warten
-  ablegen()
-  # end_flach()
+  #aufrichten()
+  #s.move(ms=2000) # etwas warten
+  #ablegen()
   #lib_commands.buzzer(3)
-  #move(steps = 3,  wave_time_ms = 2000, foreward = False) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
+  #move(steps = 3,  wave_time_ms = 10000, foreward = True) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
   #schwanzwackel(n=3)
+  schwanzbeisser()
+
   s.move(ms=1000) # etwas warten
   end_flach()
 

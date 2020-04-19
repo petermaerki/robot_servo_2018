@@ -180,7 +180,7 @@ class Servos:
       self.updateMove(self.__iTimeNow_ms)
       if done():
         return
-      hw.sleep_ms(20)
+      hw.sleep_ms(9)  # delay time between calculations and new update of pwm
       self.__iTimeNow_ms = hw.ticks_ms()
 
   def __call__(self, strNames, pos, duration=1000, move='S'):

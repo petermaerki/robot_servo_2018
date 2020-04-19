@@ -55,7 +55,7 @@ def run(s):
 
   def aufrichten(): 
     pause = 2000
-    rechtwinkel = 0.75
+    rechtwinkel = 0.72
     axes = 'BCDE'
     s('A', -0.5, pause, move='S')
     s('B', rechtwinkel, pause, move='S')
@@ -173,6 +173,20 @@ def run(s):
       s('T', i%2 * 0.5 + 0.3, wave_time_ms * 0.8) # wave tail
       one_wave(foreward = foreward, wave_time_ms = wave_time_ms)
 
+
+  def aufrichtKopfWaggel():
+    aufrichten()
+    s('A', -1, 3000, move='S')
+    s('K', 1, 4000, move='S') # Kopf, links -1.0 rechts 1.0
+    s('B,C', -0.2, 2000, move='S')
+    s.move()
+    for angle in [-1, 1, -1, 0]:
+      s('K', angle, 1000, move='S') # Kopf, links -1.0 rechts 1.0
+      s.move()
+    s('A,B,C', 0, 4000, move='S')
+    s.move(ms=2000)
+    ablegen()
+
   #handorgel(0.3)
   
   
@@ -197,8 +211,39 @@ def run(s):
   #move(steps = 3,  wave_time_ms = 10000, foreward = True) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
   #schwanzwackel(n=3)
   #schwanzbeisser()
+  # bogenbogen()
 
-  bogenbogen()
+
+  def drehen(schritte = 2, rechts=True):
+    s('B,C,D,E', -0.1, 2000, move='S')
+    s('F', 1, 3000, move='S')
+    s('T', -1, 3000, move='S')
+    s('E', -0.2, 1000, move='S')
+    s.move()
+
+    if rechts:
+      faktor = 1
+    else:
+      faktor = -1
+    for i in range(schritte):
+      s('K',  1*faktor, 1000, move='S')
+      s.move()
+      s('A', -0.5, 1000, move='S')
+      s.move()
+      s('K', -1*faktor, 1000, move='S')
+      s.move()
+      s('A', 0, 1000, move='S')
+      s.move()
+    s('K', 0, 1000, move='S')
+    s.move()
+    end_flach()
+
+  drehen(schritte=5, rechts=True) # 5 Schritte entsprechend 90 Grad
+
+  # s('B,C,D,E,F', -0.3, 2000, move='S')
+  # s.move()
+
+
 
   s.move(ms=5000) # etwas warten
   end_flach()

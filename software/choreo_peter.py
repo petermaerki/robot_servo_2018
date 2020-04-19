@@ -12,19 +12,18 @@ def run(s):
     s('G', -winkel/2.0-winkel/5.0, 3000, move='L')
     s.move()
 
-  def bogen(winkel= -0.2): 
-    s('B,C,D,E,F', winkel, 1000, move='L')
-    s('A,G', 1, 1000, move='L')
-    s.move()
+  def bogen(winkel= -0.3, movetime_ms = 4000): 
+    s('B,C,D,E,F', winkel, movetime_ms, move='S')
+    s('A', (-2.5 * winkel)-0.3, movetime_ms, move='S')
+    s('G', -2 * winkel, movetime_ms, move='S')
+    s.move(movetime_ms)
 
   def bogenbogen(n=3): 
-    s('A', 1, 1000, move='L')
-    s('G', 1, 1000, move='L')
-    for i in range(n):
-      s('B,C,D,E,F', -0.1, 2000, move='L')
-      s.move()
-      s('B,C,D,E,F', -0.2, 2000, move='L')
-      s.move()
+    bogen(winkel= -0.3, movetime_ms = 2000)
+    bogen(winkel= -0.2, movetime_ms = 1000)
+    bogen(winkel= -0.3, movetime_ms = 1000)
+    bogen(winkel= -0.2, movetime_ms = 1000)
+    bogen(winkel= 0, movetime_ms = 1000)
 
   def init_flach(): 
     pause = 300
@@ -94,10 +93,17 @@ def run(s):
     s('Z', 1, 1000, move='S')
     s('T', 0.6, 3000, move='S')
     s.move()
-    s.move(ms=2000) # etwas warten
-    s('T', 0.0, 3000, move='S')
-    s.move()
+    s.move(ms=500) # etwas warten
+    for angle in (0.5,0.8, 0.4, 1):
+      s('Z', angle, 500)
+      s.move()
+      if angle < 0.5:
+        lib_commands.buzzer(1)
+    s.move(ms=1000) # etwas warten
+    s('T', 0.0, 2000, move='S')
     s('C', 0, 3000, move='S')
+    s.move()
+    s('Z', 0, 200)
     s.move()
     ablegen()
 
@@ -168,8 +174,7 @@ def run(s):
       one_wave(foreward = foreward, wave_time_ms = wave_time_ms)
 
   #handorgel(0.3)
-  #bogen(-0.3)
-  #bogenbogen()
+  
   
 
   # init_flach()
@@ -184,18 +189,18 @@ def run(s):
   #s('T', 0)
   #s.move()
   #s('T', 0.8, 10000, move='L')
-
-  # move(steps = 3,  wave_time_ms = 3000, foreward = True)
-
   #aufrichten()
   #s.move(ms=2000) # etwas warten
   #ablegen()
+
   #lib_commands.buzzer(3)
   #move(steps = 3,  wave_time_ms = 10000, foreward = True) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
   #schwanzwackel(n=3)
-  schwanzbeisser()
+  #schwanzbeisser()
 
-  s.move(ms=1000) # etwas warten
+  bogenbogen()
+
+  s.move(ms=5000) # etwas warten
   end_flach()
 
 if __name__ == '__main__':

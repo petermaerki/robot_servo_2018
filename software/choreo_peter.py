@@ -1,5 +1,7 @@
 import lib_servo
+import lib_commands
 import initialize_robot_servo_2018
+
 
 def initialize(s):
   initialize_robot_servo_2018.initialize_serial1(s)
@@ -52,7 +54,7 @@ def run(s):
     
   def end_flach(): 
     pause = 3000
-    s('A,B,C,D,E,F,G,T,K,Z', 0.0, pause, move='L')
+    s('A,B,C,D,E,F,G,T,K,Z', 0.0, pause, move='S')
     s.move(pause)
 
   def aufrichten(): 
@@ -205,9 +207,11 @@ def run(s):
     s('K', 1, 4000, move='S') # Kopf, links -1.0 rechts 1.0
     s('B,C', -0.2, 2000, move='S')
     s.move()
+    s('Z', 1, 4000, move='S')
     for angle in [-1, 1, -1, 0]:
       s('K', angle, 1000, move='S') # Kopf, links -1.0 rechts 1.0
-      s.move()
+      s.move(1000)
+    s('Z', 0, 2000, move='S')
     s('A,B,C', 0, 4000, move='S')
     s.move(ms=2000)
     ablegen()
@@ -236,8 +240,43 @@ def run(s):
     s('A,B,C,D,E,F,G,T,K,Z', 0.0, 5000, move='S')
     s.move()
 
+  def intro():
+    init_flach()
+    s('T', 0.8, 3000, move='L')
+    s.move()
+    s('T', 0.0, 2000, move='S')
+    s.move()
+    schwanzwackel(n=3)
+    lib_commands.buzzer(1)
 
-  import lib_commands
+  def demo1():
+    intro()
+    aufrichten()
+    s.move(ms=2000) # etwas warten
+    ablegen()
+    s.move(ms=1000) # etwas warten
+    schwanzbeisser()
+    s.move(ms=1000) # etwas warten
+    bogenbogen()
+    s.move(ms=1000) # etwas warten
+    kuer()
+    s.move(ms=1000) # etwas warten
+    move(steps = 1,  wave_time_ms = 10000, foreward = True)
+    s.move(ms=500) # etwas warten
+    move(steps = 1,  wave_time_ms = 6000, foreward = True)
+    move(steps = 1,  wave_time_ms = 4000, foreward = True)
+    drehen(schritte=5, rechts=True)
+    s.move(ms=1000) # etwas warten
+    aufrichtKopfWaggel()
+    s.move(ms=1000) # etwas warten
+    drehen(schritte=4, rechts=False)
+    move(steps = 3,  wave_time_ms = 5000, foreward = False)
+    handorgel(0.4) 
+    s.move(ms=1000) # etwas warten
+    handorgel(0.8)
+    s.move(ms=2000) # etwas warten
+    lib_commands.buzzer(3)
+
 
   #handorgel(0.8)
   #init_flach()
@@ -247,7 +286,6 @@ def run(s):
   #aufrichten()
   #s.move(ms=2000) # etwas warten
   #ablegen()
-
   #lib_commands.buzzer(3)
   #move(steps = 3,  wave_time_ms = 10000, foreward = True) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
   #schwanzwackel(n=3)
@@ -256,11 +294,13 @@ def run(s):
   #aufrichtKopfWaggel()
   #drehen(schritte=5, rechts=False) # 5 Schritte entsprechend 90 Grad
   #bogenbogen()
+  #kuer()
 
 
-  aufrichtKopfWaggel()
+  demo1()
 
-  s.move(ms=5000) # etwas warten
+
+  #s.move(ms=5000) # etwas warten
   end_flach()
 
 if __name__ == '__main__':

@@ -74,7 +74,7 @@ def run(s):
     for index in range(len(axes)-1):
         s(axes[index], 0, pause, move='S')
         s(axes[index+1], rechtwinkel, pause, move='S')
-        s.move()
+        s.move(ms=1500)
     s('A', 0, pause, move='S')
     s('B', 0, pause, move='S')
     s.move()
@@ -212,6 +212,31 @@ def run(s):
     s.move(ms=2000)
     ablegen()
 
+  def kuer(): 
+    winkel= 0.3
+    s('A', 0.1 - 0.5, 1000, move='S')
+    s.move(600) # macht Bewegung nur halb fertig
+    s('B', winkel, 1000, move='S')
+    s.move(500) # macht Bewegung nur halb fertig
+    s('C', winkel, 1500, move='S')
+    s.move(700) # macht Bewegung nur halb fertig
+    s('D', winkel, 2000, move='S')
+    s.move(1500) # macht Bewegung nur halb fertig
+    s('T', winkel, 1000, move='S')
+    s.move(600) # macht Bewegung nur halb fertig
+    s('G', 0.4, 1500, move='S')
+    s.move(1000) # macht Bewegung nur halb fertig
+    s('F', 0.2, 2000, move='S')
+    s.move(1500) # macht Bewegung nur halb fertig
+    s('E', 0.2, 2000, move='S')
+    s.move(1500) # macht Bewegung nur halb fertig
+    s('G', 0.3, 200, move='S')
+    s.move()
+    s.move(1000)
+    s('A,B,C,D,E,F,G,T,K,Z', 0.0, 5000, move='S')
+    s.move()
+
+
   import lib_commands
 
   #handorgel(0.8)
@@ -228,47 +253,12 @@ def run(s):
   #schwanzwackel(n=3)
   #schwanzbeisser()
   #bogenbogen()
-
-
-
+  #aufrichtKopfWaggel()
   #drehen(schritte=5, rechts=False) # 5 Schritte entsprechend 90 Grad
-
-  def kopf_guemi(movetime_ms = 1000):
-    s('T', 0.2, 100, move='S')
-    s.move()
-    s('K', -0.2, 100, move='S')
-    s('A', -0.3, movetime_ms, move='S')
-    s.move()
-
-  def schwanz_guemi(movetime_ms = 1000):
-    s('A', 0.2, 100, move='S')
-    s.move()
-    s('T', -0.2, movetime_ms, move='S')
-    s.move()
-
-  winkel = -0.3
-  movetime_ms = 2000
-
-  s('K', -0.2, 100, move='S')
-  s('A', -0.6, movetime_ms, move='S')
-  s.move()
-  s('B,C,D,E,F', winkel, movetime_ms, move='S') # buggeli
-  s('G', -2 * winkel, movetime_ms, move='S')
-  s('A', -0.3, movetime_ms, move='S')
-  s.move()
-  s('A', 0.5, 2000, move='S')
-  s.move()
-  s('T', -0.2, movetime_ms, move='S')
-  s.move()
-  s('B,C,D,E,F,G', 0, movetime_ms, move='S') # flach
-  s.move()
-  # schwanz_guemi()
-
-  
-  # s.move()
-  #s('A,T', 0, movetime_ms, move='S') # wieder in Grundstellung
+  #bogenbogen()
 
 
+  aufrichtKopfWaggel()
 
   s.move(ms=5000) # etwas warten
   end_flach()

@@ -116,11 +116,9 @@ def run(s):
     s('T', -1, 3000, move='S')
     s('E', -0.2, 1000, move='S')
     s.move()
-
+    faktor = -1
     if rechts:
       faktor = 1
-    else:
-      faktor = -1
     for i in range(schritte):
       s('K',  1*faktor, 1000, move='S')
       s.move()
@@ -235,8 +233,40 @@ def run(s):
 
   #drehen(schritte=5, rechts=False) # 5 Schritte entsprechend 90 Grad
 
-  # s('B,C,D,E,F', -0.3, 2000, move='S')
+  def kopf_guemi(movetime_ms = 1000):
+    s('T', 0.2, 100, move='S')
+    s.move()
+    s('K', -0.2, 100, move='S')
+    s('A', -0.3, movetime_ms, move='S')
+    s.move()
+
+  def schwanz_guemi(movetime_ms = 1000):
+    s('A', 0.2, 100, move='S')
+    s.move()
+    s('T', -0.2, movetime_ms, move='S')
+    s.move()
+
+  winkel = -0.3
+  movetime_ms = 2000
+
+  s('K', -0.2, 100, move='S')
+  s('A', -0.6, movetime_ms, move='S')
+  s.move()
+  s('B,C,D,E,F', winkel, movetime_ms, move='S') # buggeli
+  s('G', -2 * winkel, movetime_ms, move='S')
+  s('A', -0.3, movetime_ms, move='S')
+  s.move()
+  s('A', 0.5, 2000, move='S')
+  s.move()
+  s('T', -0.2, movetime_ms, move='S')
+  s.move()
+  s('B,C,D,E,F,G', 0, movetime_ms, move='S') # flach
+  s.move()
+  # schwanz_guemi()
+
+  
   # s.move()
+  #s('A,T', 0, movetime_ms, move='S') # wieder in Grundstellung
 
 
 

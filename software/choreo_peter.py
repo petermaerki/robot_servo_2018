@@ -5,12 +5,14 @@ def initialize(s):
   initialize_robot_servo_2018.initialize_serial1(s)
 
 def run(s):
-  def handorgel(winkel= 0.8): 
-    s('A', 0.6, 1000, move='L')
-    s('B,D,F', winkel, 3000, move='L')
-    s('C,E', -winkel, 3000, move='L')
-    s('G', -winkel/2.0-winkel/5.0, 3000, move='L')
+  def handorgel(winkel= 0.8, movetime_ms = 2000): 
+    s('A', -winkel, movetime_ms, move='S')
+    s('B,D,F', winkel, movetime_ms, move='S')
+    s('C,E', -winkel, movetime_ms, move='S')
+    s('T', 0.5, movetime_ms/2, move='S')
+    s('G', -winkel/2.0-winkel/5.0, movetime_ms, move='S')
     s.move()
+    end_flach()
 
   def bogen(winkel= -0.3, movetime_ms = 4000): 
     s('B,C,D,E,F', winkel, movetime_ms, move='S')
@@ -107,6 +109,31 @@ def run(s):
     s.move()
     ablegen()
 
+
+  def drehen(schritte = 2, rechts=True):
+    s('B,C,D,E', -0.1, 2000, move='S')
+    s('F', 1, 3000, move='S')
+    s('T', -1, 3000, move='S')
+    s('E', -0.2, 1000, move='S')
+    s.move()
+
+    if rechts:
+      faktor = 1
+    else:
+      faktor = -1
+    for i in range(schritte):
+      s('K',  1*faktor, 1000, move='S')
+      s.move()
+      s('A', -0.5, 1000, move='S')
+      s.move()
+      s('K', -1*faktor, 1000, move='S')
+      s.move()
+      s('A', 0, 1000, move='S')
+      s.move()
+    s('K', 0, 1000, move='S')
+    s.move()
+    end_flach()
+
   def singlestep(axes = 'BCDE',  movetime_ms = 4000, first_step = False): #foreward = True,
     # time_part, argument, argument, argument, argument
     steptable = [(1.0/9.0,0.48125,-0.9625,0.48125,0),
@@ -187,18 +214,9 @@ def run(s):
     s.move(ms=2000)
     ablegen()
 
-  #handorgel(0.3)
-  
-  
-
-  # init_flach()
-  # singlestep('BCDE')
-  # singlestep('EDCB')
-
-  
   import lib_commands
 
-
+  #handorgel(0.8)
   #init_flach()
   #s('T', 0)
   #s.move()
@@ -211,34 +229,11 @@ def run(s):
   #move(steps = 3,  wave_time_ms = 10000, foreward = True) # Vor oder zurueck bewegen: wave_time_ms minimal 4000, gemuetlich 10000
   #schwanzwackel(n=3)
   #schwanzbeisser()
-  # bogenbogen()
+  #bogenbogen()
 
 
-  def drehen(schritte = 2, rechts=True):
-    s('B,C,D,E', -0.1, 2000, move='S')
-    s('F', 1, 3000, move='S')
-    s('T', -1, 3000, move='S')
-    s('E', -0.2, 1000, move='S')
-    s.move()
 
-    if rechts:
-      faktor = 1
-    else:
-      faktor = -1
-    for i in range(schritte):
-      s('K',  1*faktor, 1000, move='S')
-      s.move()
-      s('A', -0.5, 1000, move='S')
-      s.move()
-      s('K', -1*faktor, 1000, move='S')
-      s.move()
-      s('A', 0, 1000, move='S')
-      s.move()
-    s('K', 0, 1000, move='S')
-    s.move()
-    end_flach()
-
-  drehen(schritte=5, rechts=True) # 5 Schritte entsprechend 90 Grad
+  #drehen(schritte=5, rechts=False) # 5 Schritte entsprechend 90 Grad
 
   # s('B,C,D,E,F', -0.3, 2000, move='S')
   # s.move()
